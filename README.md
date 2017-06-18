@@ -16,6 +16,7 @@ CREATE TABLE `users` (
      ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Stores user data.';
 
 CREATE TABLE `interest` (
+
      `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Primary Key: Unique interests  ID.',
      `text` varchar(60) NOT NULL DEFAULT '' COMMENT 'user name.',
        PRIMARY KEY (`id`)
@@ -23,6 +24,7 @@ CREATE TABLE `interest` (
 
 
 CREATE TABLE `interests` (
+
      `interest_id` int(10) unsigned NOT NULL  COMMENT 'foreign Key: Unique interests  ID.',
      `uid` int(10) unsigned NOT NULL  COMMENT 'foreign Key: Unique user ID.',
        FOREIGN KEY (uid) REFERENCES users(uid)  ON DELETE CASCADE,
@@ -30,6 +32,7 @@ CREATE TABLE `interests` (
      ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Stores interests data.';
 
 CREATE TABLE `friends` (
+
      `uid` int(10) unsigned NOT NULL  COMMENT 'foreign Key: Unique user ID.',
      `friend_id` int(10) unsigned NOT NULL  COMMENT 'foreign Key: Unique interests  ID.',
        FOREIGN KEY (uid) REFERENCES users(uid)  ON DELETE CASCADE,
