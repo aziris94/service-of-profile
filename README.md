@@ -5,6 +5,7 @@ http://127.0.0.1:5000
 password хранится как md5 от строки
 
 CREATE TABLE `users` (
+
      `uid` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Primary Key: Unique user ID.',
      `login` varchar(60) NOT NULL DEFAULT '' COMMENT 'Unique user name.',
      `password` varchar(128) NOT NULL DEFAULT '' COMMENT 'User’s password (hashed).',
