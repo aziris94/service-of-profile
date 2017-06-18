@@ -48,44 +48,49 @@ GET /profile/<user_id>
 Ответ:
 
 {
-  "email": "3@mail.ru", 
-  "friends": [
-    {
-      "login": "dima", 
-      "uid": 2
-    }, 
-    {
-      "login": "masha", 
-      "uid": 8
-    }
-  ], 
-  "interests": [
-    {
-      "id": 2, 
-      "text": "Baby"
-    }, 
-    {
-      "id": 5, 
-      "text": "Computer"
-    }, 
-    {
-      "id": 3, 
-      "text": "Sport"
-    }, 
-    {
-      "id": 4, 
-      "text": "Science"
-    }
-  ], 
-  "login": "vika", 
-  "name": "\u0412\u0438\u043a\u0430", 
-  "password": "eccbc87e4b5ce2fe28308fd9f2a7baf3", 
-  "uid": 3
+
+        "email": "3@mail.ru",   
+        "friends": [  
+                {    
+                        "login": "dima",       
+                        "uid": 2      
+                },     
+                {    
+                        "login": "masha",       
+                        "uid": 8      
+                }    
+                ],   
+        "interests": [  
+                {    
+                        "id": 2,       
+                        "text": "Baby"      
+                },     
+                {    
+                        "id": 5,       
+                        "text": "Computer"      
+                },     
+                {    
+                        "id": 3,       
+                        "text": "Sport"      
+                },     
+                {    
+                        "id": 4,      
+                        "text": "Science"      
+                }
+                ],   
+        "login": "vika",  
+        "name": "\u0412\u0438\u043a\u0430",   
+        "password": "eccbc87e4b5ce2fe28308fd9f2a7baf3",   
+        "uid": 3
 }
 
+
+
 Ошибка:
+
 {
-	'error': 'Not found'
+
+        'error': 'Not found'        
 }
 
 POST /auth/registration
@@ -93,10 +98,11 @@ POST /auth/registration
 Param:
 
 {
-	"login":"ilya",
-	"password":"a87ff679a2f3e71d9181a67b7542122c",
-	"name":"Илья",
-	"email":"3@mail.ru",
+
+	"login":"ilya",        
+	"password":"a87ff679a2f3e71d9181a67b7542122c",        
+	"name":"Илья",        
+	"email":"3@mail.ru",        
 }
 
 
@@ -109,14 +115,16 @@ Server: Werkzeug/0.12.2 Python/2.7.12
 Date: Sun, 18 Jun 2017 09:45:52 GMT
 
 {
-  "uid": 31
+
+        "uid": 31  
 }
 
 
 Ошибка:
 
 {
-	'error': 'Not found'
+        
+        'error': 'Not found'
 }
 
 
