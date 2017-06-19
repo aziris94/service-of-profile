@@ -4,17 +4,19 @@ CREATE TABLE `users` (
      `password` varchar(128) NOT NULL DEFAULT '' COMMENT 'User’s password (hashed).',
      `email` varchar(254) DEFAULT '' COMMENT 'User’s e-mail address.',
      `name` varchar(60) NOT NULL DEFAULT '' COMMENT 'user name.',
+     `surname` varchar(60) NOT NULL DEFAULT '' COMMENT 'user name.',
        PRIMARY KEY (`uid`),
-       UNIQUE KEY `login` (`login`)
+       UNIQUE KEY `login` (`login`),
+       UNIQUE KEY `email` (`email`)
      ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Stores user data.';
-INSERT INTO users (uid, name, password, email, login) VALUES (1,'Вася','c4ca4238a0b923820dcc509a6f75849b','1@mail.ru','vasya');
-INSERT INTO users (uid, name, password, email, login) VALUES (2,'Дима','c81e728d9d4c2f636f067f89cc14862c','2@mail.ru','dima');
-INSERT INTO users (uid, name, password, email, login) VALUES (3,'Вика','eccbc87e4b5ce2fe28308fd9f2a7baf3','3@mail.ru','vika');
-INSERT INTO users (uid, name, password, email, login) VALUES (4,'Даша','a87ff679a2f3e71d9181a67b7542122c','4@mail.ru','dasha');
-INSERT INTO users (uid, name, password, email, login) VALUES (5,'Миша','e4da3b7fbbce2345d7772b0674a318d5','5@mail.ru','misha');
-INSERT INTO users (uid, name, password, email, login) VALUES (6,'Петя','1679091c5a880faf6fb5e6087eb1b2dc','6@mail.ru','petya');
-INSERT INTO users (uid, name, password, email, login) VALUES (7,'Ксюш','8f14e45fceea167a5a36dedd4bea2543','7@mail.ru','ksush');
-INSERT INTO users (uid, name, password, email, login) VALUES (8,'Маша','c9f0f895fb98ab9159f51fd0297e236d','8@mail.ru','masha');
+INSERT INTO users (uid, name,surname, password, email, login) VALUES (1,'Вася','Иванов','c4ca4238a0b923820dcc509a6f75849b','1@mail.ru','vasya');
+INSERT INTO users (uid, name,surname, password, email, login) VALUES (2,'Дима','Пупкин','c81e728d9d4c2f636f067f89cc14862c','2@mail.ru','dima');
+INSERT INTO users (uid, name,surname, password, email, login) VALUES (3,'Вика','Федоров','eccbc87e4b5ce2fe28308fd9f2a7baf3','3@mail.ru','vika');
+INSERT INTO users (uid, name,surname, password, email, login) VALUES (4,'Даша','Кочетов','a87ff679a2f3e71d9181a67b7542122c','4@mail.ru','dasha');
+INSERT INTO users (uid, name,surname, password, email, login) VALUES (5,'Миша','Богданов','e4da3b7fbbce2345d7772b0674a318d5','5@mail.ru','misha');
+INSERT INTO users (uid, name,surname, password, email, login) VALUES (6,'Петя','Галкин','1679091c5a880faf6fb5e6087eb1b2dc','6@mail.ru','petya');
+INSERT INTO users (uid, name,surname, password, email, login) VALUES (7,'Ксюш','Васильев','8f14e45fceea167a5a36dedd4bea2543','7@mail.ru','ksush');
+INSERT INTO users (uid, name,surname, password, email, login) VALUES (8,'Маша','Игнатов','c9f0f895fb98ab9159f51fd0297e236d','8@mail.ru','masha');
 
 
 CREATE TABLE `interest` (
@@ -79,7 +81,7 @@ INSERT INTO friends (uid,friend_id) VALUES (6,1);
 INSERT INTO friends (uid,friend_id) VALUES (7,8);
 
 
-curl -i -H "Content-Type: application/json" -X POST -d '{"login":"ilya","password":"a87ff679a2f3e71d9181a67b7542122c","name":"Илья","email":"3@mail.ru","interests":[{"text":"Car"},{"text":"Baby"}]}' http://localhost:5000/todo/api/v1.0/tasks
+curl -i -H "Content-Type: application/json" -X POST -d '{"login":"ilya","password":"a87ff679a2f3e71d9181a67b7542122c","name":"Илья","email":"3@mail.ru"}' http://localhost:5000/auth/registration
 
 
 
