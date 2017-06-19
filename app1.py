@@ -5,6 +5,13 @@ import string
 
 from flask import make_response
 from flask import request
+DB_PASSWD="Y5sr27Kx"
+DB_USER="profiles"
+DB_NAME="db_profiles_profile"
+
+# DB_PASSWD="root"
+# DB_USER="root"
+# DB_NAME="users"
 
 app = Flask(__name__)
 
@@ -15,7 +22,7 @@ app = Flask(__name__)
 @app.route('/profile/<int:user_id>', methods=['GET'])
 def get_task(user_id):
 
-    db = MySQLdb.connect(host="localhost", user="root", passwd="root", db="users", charset='utf8')
+    db = MySQLdb.connect(host="localhost", user=DB_USER, passwd=DB_PASSWD, db=DB_NAME, charset='utf8')
     cursor = db.cursor()
     sql = """SELECT * FROM users WHERE uid='%(user_id)s'"""%{'user_id':user_id}
     cursor.execute(sql)
@@ -72,7 +79,7 @@ def create_profile():
     else:
         abort(400)
 
-    db = MySQLdb.connect(host="localhost", user="root", passwd="root", db="users", charset='utf8')
+    db = MySQLdb.connect(host="localhost", user=DB_USER, passwd=DB_PASSWD, db=DB_NAME, charset='utf8')
     cursor = db.cursor()
 
     sql = """INSERT INTO users (login,password,name,surname,email) VALUE ('%(login)s','%(password)s','%(name)s','%(surname)s','%(email)s')""" % \
@@ -127,7 +134,7 @@ def edit_profile():
     else:
         abort(400)
 
-    db = MySQLdb.connect(host="localhost", user="root", passwd="root", db="users", charset='utf8')
+    db = MySQLdb.connect(host="localhost", user=DB_USER, passwd=DB_PASSWD, db=DB_NAME, charset='utf8')
     cursor = db.cursor()
     sql = """SELECT * FROM users WHERE uid='%(user_id)s'"""%{'user_id':profile_id}
     cursor.execute(sql)
