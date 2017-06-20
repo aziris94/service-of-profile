@@ -1,0 +1,13 @@
+CREATE TABLE `users` (
+
+     `uid` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Primary Key: Unique user ID.',
+     `login` varchar(60) NOT NULL DEFAULT '' COMMENT 'Unique user name.',
+     `password` varchar(128) NOT NULL DEFAULT '' COMMENT 'User’s password (hashed).',
+     `email` varchar(254) DEFAULT '' COMMENT 'User’s e-mail address.',
+     `name` varchar(60) NOT NULL DEFAULT '' COMMENT 'user name.',
+     `surname` varchar(60) NOT NULL DEFAULT '' COMMENT 'user name.',
+       PRIMARY KEY (`uid`),
+       UNIQUE KEY `login` (`login`),
+       UNIQUE KEY `email` (`email`)
+     ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Stores user data.';
+
