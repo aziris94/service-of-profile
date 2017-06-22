@@ -106,6 +106,7 @@ def get_task(user_id):
 def create_profile():
     if not request.json:
         abort(400)
+    print request.json
     if 'login'  in request.json and type(request.json['login']) != unicode:
         abort(400)
     if 'password'  in request.json and type(request.json['password']) is not unicode:
@@ -118,7 +119,6 @@ def create_profile():
         abort(400)
     if 'interests' in request.json and type(request.json['interests']) is not list:
         abort(400)
-
     if 'login'  in request.json:
         login = request.json.get('login')
 #    else:
@@ -152,16 +152,17 @@ def create_profile():
           {'login': login,'password': password,'name': name,'surname':surname,'email': email}
     cursor.execute(sql)
     uid = cursor.lastrowid
-    interests = request.json.get('interests')
-    print interests
-    for interest in interests:
-    #    print interest['interest']
-        sql = """SELECT * FROM interest WHERE interest like '%(text)s' """%{'text':interest['interest']}
-        cursor.execute(sql)
-        interest_id=cursor.fetchall()
-        for id in interest_id:
-#            print id
-            cursor.execute("""INSERT INTO interests (interest_id,uid) VALUE ('%(interest_id)s','%(uid)s')"""%{'interest_id':id[0],'uid':uid})
+    if 'interests'  in request.json:
+	    interests = request.json.get('interests')
+	    print interests
+	    for interest in interests:
+	    #    print interest['interest']
+	        sql = """SELECT * FROM interest WHERE text like '%(text)s' """%{'text':interest['interest']}
+	        cursor.execute(sql)
+	        interest_id=cursor.fetchall()
+	        for id in interest_id:
+	#            print id
+	            cursor.execute("""INSERT INTO interests (interest_id,uid) VALUE ('%(interest_id)s','%(uid)s')"""%{'interest_id':id[0],'uid':uid})
 
     db.commit()
     db.close()
@@ -171,6 +172,7 @@ def create_profile():
 
 @app.route('/profile', methods=['POST'])
 def edit_profile():
+    print request.json
     if not request.json:
         abort(400)
     if 'login'  in request.json and type(request.json['login']) != unicode:
@@ -183,11 +185,11 @@ def edit_profile():
         abort(400)
     if 'email'  in request.json and type(request.json['email']) is not unicode:
         abort(400)
-    if 'profile_id' in request.json and type(request.json['profile_id']) is not int:
+    if 'uid' in request.json and type(request.json['uid']) is not int:
         abort(400)
 
-    if 'profile_id'  in request.json:
-        profile_id = request.json.get('profile_id')
+    if 'uid'  in request.json:
+        uid = request.json.get('uid')
     else:
         abort(400)
     if 'login'  in request.json:
@@ -213,19 +215,19 @@ def edit_profile():
 
     db = MySQLdb.connect(host="localhost", user=DB_USER, passwd=DB_PASSWD, db=DB_NAME, charset='utf8')
     cursor = db.cursor()
-    sql = """SELECT * FROM users WHERE uid='%(user_id)s'"""%{'user_id':profile_id}
+    sql = """SELECT * FROM users WHERE uid='%(user_id)s'"""%{'user_id':uid}
     cursor.execute(sql)
     data = cursor.fetchall()
     if len(data)==0:
         abort(404)
     sql = """ UPDATE users SET  login='%(login)s',password='%(password)s',name='%(name)s',surname='%(surname)s',email='%(email)s' WHERE uid='%(uid)s'""" % \
-          {'login': login,'password': password,'name': name,'surname':surname,'email': email,'uid':profile_id}
+          {'login': login,'password': password,'name': name,'surname':surname,'email': email,'uid':uid}
     cursor.execute(sql)
-    uid = cursor.lastrowid
+    uid_new = cursor.lastrowid
     db.commit()
     db.close()
 
-    return jsonify({'uid': profile_id}), 200
+    return jsonify({'uid': uid}), 200
 
 
 @app.errorhandler(404)
@@ -238,5 +240,5 @@ def not_found(error):
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0',debug=True)
+    app.run(host='0.0.0.0',debug=True, port=5000)
 

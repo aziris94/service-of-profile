@@ -80,7 +80,7 @@ Param:
 
 {
 	
-	"profile_id": 9,
+	"uid": 9,
 	"login":"ilya",
 	"password":"a87ff679a2f3e71d9181a67b7542122c",
 	"name":"Илья",
