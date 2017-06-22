@@ -114,3 +114,15 @@ Date: Sun, 18 Jun 2017 09:45:52 GMT
         'error': 'Not found'
 }
 
+
+
+$ wget https://bootstrap.pypa.io/get-pip.py
+$ python get-pip.py
+$ pip install virtualenv
+
+$ mkdir todo-api
+$ cd todo-api
+$ virtualenv flask
+$ flask/bin/pip install flask
+$ sudo apt-get install libmysqlclient-dev
+$ flask/bin/pip install MySQL-python

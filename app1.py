@@ -7,11 +7,11 @@ from flask import make_response
 from flask import request
 DB_PASSWD="Y5sr27Kx"
 DB_USER="profiles"
-DB_NAME="db_profiles_profile"
+DB_NAME="webservice"
 
-# DB_PASSWD="root"
-# DB_USER="root"
-# DB_NAME="users"
+#DB_PASSWD="root"
+#DB_USER="root"
+#DB_NAME="users"
 
 app = Flask(__name__)
 
@@ -20,7 +20,7 @@ app = Flask(__name__)
 #     return jsonify({'tasks': tasks})
 
 @app.route('/profile/cache', methods=['GET'])
-def get_task(user_id):
+def cache_profile():
     email = request.args.get('email')
     db = MySQLdb.connect(host="localhost", user=DB_USER, passwd=DB_PASSWD, db=DB_NAME, charset='utf8')
     cursor = db.cursor()
@@ -182,4 +182,4 @@ def not_found(error):
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True,host='0.0.0.0')
