@@ -27,6 +27,10 @@ GET /profile/<user_id>
         "name": "\u0412\u0438\u043a\u0430",   
         "password": "eccbc87e4b5ce2fe28308fd9f2a7baf3",   
         "uid": 3
+  	"interests": [
+    	{
+	      "interest": "Car"
+	}]
 }
 
 
@@ -50,6 +54,10 @@ Param:
 	"name":"Илья",
 	"surname": "Кочетов"
 	"email":"3@mail.ru",
+        "interests": [
+        {
+              "interest": "Car"
+        }]
 }
 
 
