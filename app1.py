@@ -152,6 +152,7 @@ def create_profile():
           {'login': login,'password': password,'name': name,'surname':surname,'email': email}
     cursor.execute(sql)
     uid = cursor.lastrowid
+    print uid
     if 'interests'  in request.json:
 	    interests = request.json.get('interests')
 	    print interests
