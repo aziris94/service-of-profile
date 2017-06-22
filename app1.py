@@ -1,4 +1,5 @@
 #!flask/bin/python
+
 from flask import Flask, jsonify, abort
 import MySQLdb
 import string
@@ -19,11 +20,65 @@ app = Flask(__name__)
 # def get_users():
 #     return jsonify({'tasks': tasks})
 
+@app.route('/profile/cache', methods=['GET'])
+def cache_profile():
+    email = request.args.get('email')
+    db = MySQLdb.connect(host="localhost", user=DB_USER, passwd=DB_PASSWD, db=DB_NAME, charset='utf8')
+    cursor = db.cursor()
+    sql = """SELECT * FROM users WHERE email='%(email)s'"""%{'email':email}
+    cursor.execute(sql)
+    data = cursor.fetchall()
+    user = dict()
+    for rec in data:
+        uid, login, password,email, name, surname = rec
+        user['profile_id'] = uid
+        user['email']=email
+        user['password']=password
+    db.close()
+
+    if len(user) == 0:
+        abort(404)
+    return jsonify(user)
+
+@app.route('/profile', methods=['GET'])
+def get_list_user():
+    db = MySQLdb.connect(host="localhost", user=DB_USER, passwd=DB_PASSWD, db=DB_NAME, charset='utf8')
+    cursor = db.cursor()
+    sql = """SELECT * FROM users"""
+    cursor.execute(sql)
+    data = cursor.fetchall()
+    users = []
+    for rec in data:
+        user = dict()
+        uid, login, password,email, name, surname = rec
+        sql = """SELECT DISTINCT  ins.uid,ins.interest_id,inter.text FROM interests ins JOIN interest inter ON inter.id=ins.interest_id WHERE uid='%(user_id)s'"""%{'user_id':uid}
+        cursor.execute(sql)
+        data_inter = cursor.fetchall()
+        user['uid'] = uid
+        user['login'] = login
+        user['password']=password
+        user['email']=email
+        interests = []
+        for inter in data_inter:
+            interests.append({'interest':inter[2]})
+        user['interests'] = interests
+        user['name']=unicode(name)
+        user['surname'] = unicode(surname)
+        users.append(user)
+    db.close()
+
+    if len(users) == 0:
+        abort(404)
+    return jsonify(users)
+
 @app.route('/profile/<int:user_id>', methods=['GET'])
 def get_task(user_id):
 
     db = MySQLdb.connect(host="localhost", user=DB_USER, passwd=DB_PASSWD, db=DB_NAME, charset='utf8')
     cursor = db.cursor()
+    sql = """SELECT DISTINCT  ins.uid,ins.interest_id,inter.text FROM interests ins JOIN interest inter ON inter.id=ins.interest_id WHERE uid='%(user_id)s'"""%{'user_id':user_id}
+    cursor.execute(sql)
+    data_inter = cursor.fetchall()
     sql = """SELECT * FROM users WHERE uid='%(user_id)s'"""%{'user_id':user_id}
     cursor.execute(sql)
     data = cursor.fetchall()
@@ -34,8 +89,12 @@ def get_task(user_id):
         user['login'] = login
         user['password']=password
         user['email']=email
-        user['name']=unicode(name)
+        user['name']=name.encode('utf8')
         user['surname'] = unicode(surname)
+	interests = []
+        for inter in data_inter:
+            interests.append({'interest':inter[2]})
+        user['interests'] = interests
     db.close()
 
     if len(user) == 0:
@@ -57,11 +116,13 @@ def create_profile():
         abort(400)
     if 'email'  in request.json and type(request.json['email']) is not unicode:
         abort(400)
+    if 'interests' in request.json and type(request.json['interests']) is not list:
+        abort(400)
 
     if 'login'  in request.json:
         login = request.json.get('login')
-    else:
-        abort(400)
+#    else:
+#        abort(400)
     if 'password'  in request.json:
         password = request.json.get('password')
     else:
@@ -81,11 +142,27 @@ def create_profile():
 
     db = MySQLdb.connect(host="localhost", user=DB_USER, passwd=DB_PASSWD, db=DB_NAME, charset='utf8')
     cursor = db.cursor()
+    sql = """SELECT * FROM users WHERE email='%(email)s'"""%{'email':email}
+    cursor.execute(sql)
+    data = cursor.fetchall()
+    if len(data)!=0:
+        abort(422)
 
     sql = """INSERT INTO users (login,password,name,surname,email) VALUE ('%(login)s','%(password)s','%(name)s','%(surname)s','%(email)s')""" % \
           {'login': login,'password': password,'name': name,'surname':surname,'email': email}
     cursor.execute(sql)
     uid = cursor.lastrowid
+    interests = request.json.get('interests')
+    print interests
+    for interest in interests:
+    #    print interest['interest']
+        sql = """SELECT * FROM interest WHERE interest like '%(text)s' """%{'text':interest['interest']}
+        cursor.execute(sql)
+        interest_id=cursor.fetchall()
+        for id in interest_id:
+#            print id
+            cursor.execute("""INSERT INTO interests (interest_id,uid) VALUE ('%(interest_id)s','%(uid)s')"""%{'interest_id':id[0],'uid':uid})
+
     db.commit()
     db.close()
 
@@ -115,8 +192,8 @@ def edit_profile():
         abort(400)
     if 'login'  in request.json:
         login = request.json.get('login')
-    else:
-        abort(400)
+ #   else:
+ #       abort(400)
     if 'password'  in request.json:
         password = request.json.get('password')
     else:
@@ -161,4 +238,4 @@ def not_found(error):
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0',debug=True)
