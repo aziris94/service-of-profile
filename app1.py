@@ -19,6 +19,27 @@ app = Flask(__name__)
 # def get_users():
 #     return jsonify({'tasks': tasks})
 
+@app.route('/profile/cache', methods=['GET'])
+def get_task(user_id):
+    email = request.args.get('email')
+    db = MySQLdb.connect(host="localhost", user=DB_USER, passwd=DB_PASSWD, db=DB_NAME, charset='utf8')
+    cursor = db.cursor()
+    sql = """SELECT * FROM users WHERE email='%(email)s'"""%{'email':email}
+    cursor.execute(sql)
+    data = cursor.fetchall()
+    user = dict()
+    for rec in data:
+        uid, login, password,email, name, surname = rec
+        user['profile_id'] = uid
+        user['email']=email
+        user['password']=password
+    db.close()
+
+    if len(user) == 0:
+        abort(404)
+    return jsonify(user)
+
+
 @app.route('/profile/<int:user_id>', methods=['GET'])
 def get_task(user_id):
 
