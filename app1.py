@@ -188,6 +188,8 @@ def edit_profile():
         abort(400)
     if 'uid' in request.json and type(request.json['uid']) is not int:
         abort(400)
+    if 'interests' in request.json and type(request.json['interests']) is not list:
+        abort(400)
 
     if 'uid'  in request.json:
         uid = request.json.get('uid')
@@ -221,6 +223,22 @@ def edit_profile():
     data = cursor.fetchall()
     if len(data)==0:
         abort(404)
+    if 'interests'  in request.json:
+            interests = request.json.get('interests')
+	    sql="""DELETE from interests WHERE uid='%(uid)s'"""%{'uid':uid}
+	    cursor.execute(sql)
+            db.commit()
+
+            print interests
+            for interest in interests:
+            #    print interest['interest']
+                sql = """SELECT * FROM interest WHERE text like '%(text)s' """%{'text':interest['interest']}
+                cursor.execute(sql)
+                interest_id=cursor.fetchall()
+                for id in interest_id:
+        #            print id
+                    cursor.execute("""INSERT INTO interests (interest_id,uid) VALUE ('%(interest_id)s','%(uid)s')"""%{'interest_id':id[0],'uid':uid})
+
     sql = """ UPDATE users SET  login='%(login)s',password='%(password)s',name='%(name)s',surname='%(surname)s',email='%(email)s' WHERE uid='%(uid)s'""" % \
           {'login': login,'password': password,'name': name,'surname':surname,'email': email,'uid':uid}
     cursor.execute(sql)
