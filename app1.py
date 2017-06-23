@@ -6,13 +6,13 @@ import string
 
 from flask import make_response
 from flask import request
-# DB_PASSWD="Y5sr27Kx"
-# DB_USER="profiles"
-# DB_NAME="db_profiles_profile"
+DB_PASSWD="Y5sr27Kx"
+DB_USER="profiles"
+DB_NAME="db_profiles_profile"
 
-DB_PASSWD="root"
-DB_USER="root"
-DB_NAME="users"
+# DB_PASSWD="root"
+# DB_USER="root"
+# DB_NAME="users"
 
 app = Flask(__name__)
 
