@@ -6,13 +6,13 @@ import string
 
 from flask import make_response
 from flask import request
-DB_PASSWD="Y5sr27Kx"
-DB_USER="profiles"
-DB_NAME="db_profiles_profile"
+# DB_PASSWD="Y5sr27Kx"
+# DB_USER="profiles"
+# DB_NAME="db_profiles_profile"
 
-# DB_PASSWD="root"
-# DB_USER="root"
-# DB_NAME="users"
+DB_PASSWD="root"
+DB_USER="root"
+DB_NAME="users"
 
 app = Flask(__name__)
 
@@ -91,7 +91,7 @@ def get_task(user_id):
         user['email']=email
         user['name']=name.encode('utf8')
         user['surname'] = unicode(surname)
-	interests = []
+        interests = []
         for inter in data_inter:
             interests.append({'interest':inter[2]})
         user['interests'] = interests
@@ -169,6 +169,46 @@ def create_profile():
     db.close()
 
     return jsonify({'uid': uid}), 201
+
+
+
+@app.route('/profile/search', methods=['POST'])
+def get_array_users():
+    if not request.json:
+        abort(400)
+    print request.json
+    if 'uid'  in request.json and type(request.json['uid']) != list:
+        abort(400)
+
+    if 'uid'  in request.json:
+        uid = request.json.get('uid')
+    else:
+        abort(400)
+    print uid
+    uid_list=str(uid).strip('[]')
+    db = MySQLdb.connect(host="localhost", user=DB_USER, passwd=DB_PASSWD, db=DB_NAME, charset='utf8')
+    cursor = db.cursor()
+    sql = """SELECT * FROM users WHERE uid in (%(uid_list)s)""" % {'uid_list': uid_list}
+    print sql
+    cursor.execute(sql)
+    data = cursor.fetchall()
+    if len(data)==0:
+        abort(404)
+
+    users=[]
+    for rec in data:
+        user = dict()
+        uid, login, password, email, name, surname = rec
+        user['uid'] = uid
+        user['login'] = login
+        user['email'] = email
+        user['name'] = name.encode('utf8')
+        user['surname'] = unicode(surname)
+        users.append(user)
+    db.commit()
+    db.close()
+
+    return jsonify({'users': users}), 201
 
 
 @app.route('/profile', methods=['POST'])
