@@ -185,6 +185,8 @@ def get_array_users():
     else:
         abort(400)
     print uid
+    if len(uid) == 0:
+	abort(404)
     uid_list=str(uid).strip('[]')
     db = MySQLdb.connect(host="localhost", user=DB_USER, passwd=DB_PASSWD, db=DB_NAME, charset='utf8')
     cursor = db.cursor()
